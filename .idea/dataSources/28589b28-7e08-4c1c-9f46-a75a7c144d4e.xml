@@ -16,7 +16,7 @@
     <table id="7" parent="2" name="sqlite_sequence">
       <System>1</System>
     </table>
-    <table id="8" parent="2" name="toDo"/>
+    <table id="8" parent="2" name="task"/>
     <column id="9" parent="6" name="type">
       <Position>1</Position>
       <DataType>text|0s</DataType>
@@ -43,7 +43,7 @@
     <column id="15" parent="7" name="seq">
       <Position>2</Position>
     </column>
-    <column id="16" parent="8" name="idToDo">
+    <column id="16" parent="8" name="idTask">
       <Position>1</Position>
       <DataType>INTEGER|0s</DataType>
       <SequenceIdentity>null</SequenceIdentity>
@@ -64,7 +64,7 @@
       <NotNull>1</NotNull>
     </column>
     <key id="20" parent="8">
-      <ColNames>idToDo</ColNames>
+      <ColNames>idTask</ColNames>
       <Primary>1</Primary>
     </key>
   </database-model>

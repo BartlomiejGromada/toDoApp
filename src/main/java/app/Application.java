@@ -1,7 +1,9 @@
 package app;
 
 import database.SQLiteJDBC;
-import database.ToDoTable;
+import model.Task;
+import repo.TaskRepository;
+import service.TaskService;
 
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -9,22 +11,24 @@ import java.util.Scanner;
 public class Application {
 
     private Scanner sc;
-    private ToDoTable toDoTable;
+    private TaskService taskService;
 
     public Application() {
-        this.toDoTable = new ToDoTable();
+        this.taskService = new TaskService(new TaskRepository());
         this.sc = new Scanner(System.in);
     }
 
     public void start() throws SQLException {
         while (true) {
 
-            System.out.println("\n----TABLE TODO----");
-            toDoTable.getAll();
+            System.out.println("\n----ALL TASKS----");
+            taskService.getAllTasks();
             System.out.println("\n1. INSERT");
             System.out.println("2. UPDATE");
-            System.out.println("3. DELETE");
-            System.out.println("4. EXIT");
+            System.out.println("3. MARK AS DONE");
+            System.out.println("4. DELETE");
+            System.out.println("5. DELETE ALL DONE");
+            System.out.println("6. EXIT");
             System.out.println("\nEnter the operation number:");
             int operation = sc.nextInt();
             sc.nextLine();
@@ -37,9 +41,15 @@ public class Application {
                     updateOperation();
                     break;
                 case 3:
-                    deleteOperation();
+                    markAsDoneOperation();
                     break;
                 case 4:
+                    deleteOperation();
+                    break;
+                case 5:
+                    taskService.deleteAllDoneTasks();
+                    break;
+                case 6:
                     SQLiteJDBC.close();
                     System.exit(0);
                     break;
@@ -64,7 +74,7 @@ public class Application {
                 System.out.println("Enter valid values");
             else {
                 flag = false;
-                toDoTable.insert(name, priority);
+                taskService.insertTask(new Task(name, priority, 0));
             }
         }
     }
@@ -92,7 +102,24 @@ public class Application {
                 System.out.println("Enter valid values");
             else {
                 flag = false;
-                toDoTable.update(id, name, priority, isDone);
+                taskService.updateTask(id, new Task(name, priority, isDone));
+            }
+        }
+    }
+
+    private void markAsDoneOperation() {
+        boolean flag = true;
+
+        while (flag) {
+            System.out.println("Enter of the id task you want to mark as done: ");
+            int id = sc.nextInt();
+            sc.nextLine();
+
+            if (id < 1)
+                System.out.println("Enter valid values");
+            else {
+                flag = false;
+                taskService.markTaskAsDone(id);
             }
         }
     }
@@ -109,7 +136,7 @@ public class Application {
                 System.out.println("Enter valid values");
             else {
                 flag = false;
-                toDoTable.delete(id);
+                taskService.deleteTask(id);
             }
         }
     }
